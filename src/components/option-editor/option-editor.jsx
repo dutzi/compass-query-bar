@@ -60,6 +60,7 @@ class OptionEditor extends Component {
     const textCompleter = tools.textCompleter;
     this.completer = new QueryAutoCompleter(props.serverVersion, textCompleter, props.schemaFields);
     this.boundOnFieldsChanged = this.onFieldsChanged.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   /**
@@ -70,6 +71,8 @@ class OptionEditor extends Component {
       this.editor.setValue(this.props.value);
       this.editor.clearSelection();
     });
+
+    document.addEventListener('keydown', this.handleKeyDown);
   }
 
   /**
@@ -87,6 +90,7 @@ class OptionEditor extends Component {
    */
   componentWillUnmount() {
     this.unsub();
+    document.removeEventListener('keydown', this.handleKeyDown);
   }
 
   onFieldsChanged(fields) {
@@ -105,6 +109,15 @@ class OptionEditor extends Component {
       }
     });
   };
+
+  handleKeyDown(e) {
+    if (e.key.toLowerCase() === 'l' && e.metaKey && this.props.label === 'filter') {
+      if (this.editor) {
+        this.editor.focus();
+      }
+    }
+  }
+
 
   /**
    * Render the editor.
